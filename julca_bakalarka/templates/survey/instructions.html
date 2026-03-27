@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Dotazník – Instrukce{% endblock %}
+
+{% block head %}
+<style>
+    .instructions {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+    .instructions h1 { font-size: 1.6rem; }
+    .instruction-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .instruction-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .instruction-icon {
+        font-size: 2rem;
+        min-width: 3rem;
+        text-align: center;
+    }
+    .instruction-text { font-size: 1.05rem; line-height: 1.4; }
+    .instruction-text strong { color: #4f46e5; }
+    .start-btn {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+        margin-top: 1rem;
+    }
+    .note {
+        text-align: center;
+        color: #6b7280;
+        font-size: 0.95rem;
+        margin-top: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="instructions">
+    <h1>Jak to funguje?</h1>
+    <p style="text-align:center; color:#6b7280;">Uvidíš krátkou otázku s obrázkem nebo videem. Odpovídej přejetím prstu nebo tlačítky.</p>
+
+    <ul class="instruction-list">
+        <li class="instruction-item">
+            <span class="instruction-icon" style="color:#16a34a;">&#8594;</span>
+            <span class="instruction-text"><strong>Přejeď doprava</strong> nebo stiskni tlačítko <strong>ANO</strong> pokud souhlasíš.</span>
+        </li>
+        <li class="instruction-item">
+            <span class="instruction-icon" style="color:#dc2626;">&#8592;</span>
+            <span class="instruction-text"><strong>Přejeď doleva</strong> nebo stiskni tlačítko <strong>NE</strong> pokud nesouhlasíš.</span>
+        </li>
+        <li class="instruction-item">
+            <span class="instruction-icon" style="color:#2563eb;">&#8593;</span>
+            <span class="instruction-text"><strong>Přejeď nahoru</strong> pokud nevíš.</span>
+        </li>
+    </ul>
+
+    <p class="note">Nejdříve si to zkusíš na cvičné otázce.</p>
+
+    <button class="btn btn-primary start-btn" id="startBtn">Rozumím, jdeme na to!</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Ensure participant_id exists
+if (!sessionStorage.getItem('participant_id')) {
+    window.location.href = '/survey';
+}
+document.getElementById('startBtn').addEventListener('click', function() {
+    window.location.href = '/survey/questions';
+});
+</script>
+{% endblock %}

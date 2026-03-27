@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Dotazník – Hotovo{% endblock %}
+
+{% block head %}
+<style>
+    .done-page {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1.5rem;
+        text-align: center;
+    }
+    .done-icon { font-size: 4rem; }
+    .done-page h1 { font-size: 1.8rem; color: #16a34a; }
+    .done-page p { color: #6b7280; font-size: 1.1rem; line-height: 1.5; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="done-page">
+    <div class="done-icon">&#10003;</div>
+    <h1>Hotovo!</h1>
+    <p>Děkujeme za vyplnění dotazníku. Tvoje odpovědi byly uloženy.</p>
+    <p>Teď můžeš zavřít tuto stránku.</p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Clear session
+sessionStorage.removeItem('participant_id');
+</script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Admin – Přehled{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/admin.css">
+{% endblock %}
+
+{% block content %}
+<h1>Administrace dotazníku</h1>
+
+<div class="admin-section">
+    <div class="section-header">
+        <h2>Otázky</h2>
+        <a href="/admin/questions/new" class="btn btn-primary btn-sm">+ Přidat otázku</a>
+    </div>
+
+    <div class="question-list" id="questionList">
+        {% if questions %}
+            {% for q in questions %}
+            <div class="question-card" data-id="{{ q.id }}">
+                <div class="question-info">
+                    <span class="question-order">#{{ q.order }}</span>
+                    <span class="question-text">{{ q.text }}</span>
+                    {% if q.is_practice %}
+                        <span class="badge badge-practice">Cvičná</span>
+                    {% endif %}
+                </div>
+                <div class="question-actions">
+                    <a href="/admin/questions/{{ q.id }}/edit" class="btn btn-secondary btn-sm">Upravit</a>
+                    <button class="btn btn-danger btn-sm" onclick="deleteQuestion({{ q.id }})">Smazat</button>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty-state">Zatím žádné otázky. Přidejte první!</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="admin-section">
+    <div class="section-header">
+        <h2>Odpovědi</h2>
+        <a href="/api/admin/export/csv" class="btn btn-success btn-sm">Stáhnout CSV</a>
+    </div>
+    <div id="responsesArea">
+        <p class="empty-state">Načítání odpovědí...</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/admin.js"></script>
+{% endblock %}

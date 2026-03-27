@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Admin – {% if question %}Upravit{% else %}Nová{% endif %} otázka{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/admin.css">
+{% endblock %}
+
+{% block content %}
+<h1>{% if question %}Upravit otázku{% else %}Nová otázka{% endif %}</h1>
+
+<form class="question-form" id="questionForm" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="text">Text otázky</label>
+        <input type="text" id="text" name="text" value="{{ question.text if question else '' }}" placeholder="Např.: Je tohle vtipné?" required>
+    </div>
+
+    <div class="form-group">
+        <label for="order">Pořadí</label>
+        <input type="text" id="order" name="order" value="{{ question.order if question else '0' }}" placeholder="0 = automatické">
+    </div>
+
+    <div class="form-group">
+        <label class="checkbox-label">
+            <input type="checkbox" id="is_practice" name="is_practice" {% if question and question.is_practice %}checked{% endif %}>
+            Cvičná otázka (pro nácvik)
+        </label>
+    </div>
+
+    <div class="form-group">
+        <label for="media">GIF / Video</label>
+        {% if question %}
+            <p class="current-media">Aktuální: <a href="/media/{{ question.media_filename }}" target="_blank">{{ question.media_filename }}</a></p>
+            <input type="file" id="media" name="media" accept=".gif,.mp4,.webm,.webp,.jpg,.jpeg,.png">
+            <p class="help-text">Ponechte prázdné pro zachování stávajícího souboru.</p>
+        {% else %}
+            <input type="file" id="media" name="media" accept=".gif,.mp4,.webm,.webp,.jpg,.jpeg,.png" required>
+        {% endif %}
+    </div>
+
+    <div class="form-actions">
+        <a href="/admin" class="btn btn-secondary">Zpět</a>
+        <button type="submit" class="btn btn-primary">
+            {% if question %}Uložit změny{% else %}Vytvořit otázku{% endif %}
+        </button>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const isEdit = {{ 'true' if question else 'false' }};
+const questionId = {{ question.id if question else 'null' }};
+
+document.getElementById('questionForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = new FormData();
+    form.append('text', document.getElementById('text').value);
+    form.append('order', document.getElementById('order').value || '0');
+    form.append('is_practice', document.getElementById('is_practice').checked ? 'true' : 'false');
+
+    const mediaInput = document.getElementById('media');
+    if (mediaInput.files.length > 0) {
+        form.append('media', mediaInput.files[0]);
+    }
+
+    const url = isEdit ? `/api/admin/questions/${questionId}` : '/api/admin/questions';
+    const method = isEdit ? 'PUT' : 'POST';
+
+    try {
+        const resp = await fetch(url, { method, body: form });
+        if (resp.ok) {
+            window.location.href = '/admin';
+        } else {
+            const err = await resp.json();
+            alert(err.detail || 'Chyba při ukládání');
+        }
+    } catch (error) {
+        alert('Chyba připojení');
+    }
+});
+</script>
+{% endblock %}

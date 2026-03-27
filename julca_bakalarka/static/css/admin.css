@@ -1,0 +1,134 @@
+/* Admin styles */
+.admin-section {
+    margin-bottom: 2rem;
+}
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.section-header h2 { margin-bottom: 0; }
+
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    border-radius: 8px;
+}
+
+/* Question list */
+.question-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    gap: 0.5rem;
+}
+.question-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
+}
+.question-order {
+    color: #6b7280;
+    font-weight: 600;
+    min-width: 2rem;
+}
+.question-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.question-actions {
+    display: flex;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+
+/* Badges */
+.badge {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.badge-practice { background: #fbbf24; color: #78350f; }
+
+/* Form */
+.question-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.form-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #374151;
+}
+.checkbox-label {
+    flex-direction: row !important;
+    align-items: center;
+    gap: 0.5rem !important;
+    cursor: pointer;
+}
+.form-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+.current-media {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+.current-media a { color: #4f46e5; }
+.help-text {
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    color: #9ca3af;
+    padding: 1.5rem;
+}
+
+/* Response table */
+.response-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.response-table th, .response-table td {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+.response-table th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+}
+.answer-yes { color: #16a34a; font-weight: 600; }
+.answer-no { color: #dc2626; font-weight: 600; }
+.answer-skip { color: #6b7280; font-weight: 600; }

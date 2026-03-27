@@ -1,0 +1,29 @@
+services:
+  api: &main_app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: julca_bakalarka:${JULCA_BAKALARKA_VERSION:-latest}
+    restart: always
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      JULCA_BAKALARKA_HOST: 0.0.0.0
+      JULCA_BAKALARKA_DB_FILE: /db_data/db.sqlite3
+      JULCA_BAKALARKA_MEDIA_DIR: /media_data/
+    volumes:
+      - julca_bakalarka-db-data:/db_data/
+      - ./media_data:/media_data/
+
+  migrator:
+    <<: *main_app
+    restart: "no"
+    command: piccolo migrations forwards all
+    depends_on: {}
+
+
+
+volumes:
+  julca_bakalarka-db-data:
+    name: julca_bakalarka-db-data

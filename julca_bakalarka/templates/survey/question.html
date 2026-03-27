@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Dotazník{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/survey.css">
+{% endblock %}
+
+{% block content %}
+<div class="survey-wrapper" id="surveyWrapper">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text" id="progressText"></div>
+
+    <div class="card-area" id="cardArea">
+        <!-- Card gets inserted by JS -->
+    </div>
+
+    <div class="button-row" id="buttonRow">
+        <button class="btn btn-danger swipe-btn" id="btnNo">NE</button>
+        <button class="btn btn-success swipe-btn" id="btnYes">ANO</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/survey.js"></script>
+{% endblock %}
