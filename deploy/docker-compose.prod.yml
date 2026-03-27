@@ -1,0 +1,9 @@
+services:
+  api:
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      JULCA_BAKALARKA_ENVIRONMENT: "prod"
+      JULCA_BAKALARKA_RELOAD: "False"
+      JULCA_BAKALARKA_WORKERS_COUNT: "2"
+      JULCA_BAKALARKA_LOG_LEVEL: "WARNING"
