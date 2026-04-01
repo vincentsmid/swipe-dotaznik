@@ -140,6 +140,23 @@ async def list_responses() -> list[dict[str, Any]]:
     return await dao.get_all()
 
 
+@router.get("/sessions")
+async def list_sessions() -> list[dict[str, Any]]:
+    """List all survey sessions."""
+    dao = SessionDAO()
+    return await dao.get_all_sessions()
+
+
+@router.delete("/participants/{participant_id}")
+async def delete_participant(participant_id: str) -> dict[str, Any]:
+    """Delete all responses and session for a participant."""
+    response_dao = ResponseDAO()
+    session_dao = SessionDAO()
+    await response_dao.delete_by_participant(participant_id)
+    await session_dao.delete_session(participant_id)
+    return {"ok": True}
+
+
 @router.get("/export/csv")
 async def export_csv() -> StreamingResponse:
     """Export all responses as a CSV file."""
@@ -167,8 +184,9 @@ async def export_csv() -> StreamingResponse:
     output = io.StringIO()
     writer = csv.writer(output, delimiter=";")
 
-    # Header: Participant | Q1 answer | Q1 time | ... | Count | Duration
-    header = ["Účastník"]
+    # Header: Participant | School Code | Class
+    # | Q1 answer | Q1 time | ... | Count | Duration
+    header = ["Účastník", "Kód školy", "Třída"]
     for q in questions:
         header.append(q["text"])
         header.append(f"{q['text']} (s)")
@@ -182,10 +200,17 @@ async def export_csv() -> StreamingResponse:
 
         session = session_lookup.get(pid)
         duration_seconds = ""
-        if session and session.get("duration_ms") is not None:
-            duration_seconds = round(session["duration_ms"] / 1000, 1)
+        school_code = ""
+        class_number = ""
+        if session:
+            if session.get("duration_ms") is not None:
+                duration_seconds = round(session["duration_ms"] / 1000, 1)
+            if session.get("school_code") is not None:
+                school_code = session["school_code"]
+            if session.get("class_number") is not None:
+                class_number = session["class_number"]
 
-        row: list[Any] = [pid]
+        row: list[Any] = [pid, school_code, class_number]
         for q in questions:
             key = (pid, q["id"])
             row.append(answer_lookup.get(key, "N/A"))

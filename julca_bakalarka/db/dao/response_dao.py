@@ -49,6 +49,12 @@ class ResponseDAO:
         )
         return [row["participant_id"] for row in rows]
 
+    async def delete_by_participant(self, participant_id: str) -> None:
+        """Delete all responses for a participant."""
+        await SurveyResponse.delete().where(
+            SurveyResponse.participant_id == participant_id
+        )
+
     async def get_answered_question_ids(
         self,
         participant_id: str,

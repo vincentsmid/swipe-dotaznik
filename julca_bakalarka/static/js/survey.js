@@ -11,6 +11,8 @@
         window.location.href = "/survey";
         return;
     }
+    const schoolCode = sessionStorage.getItem("school_code");
+    const classNumber = sessionStorage.getItem("class_number");
 
     const cardArea = document.getElementById("cardArea");
     const progressFill = document.getElementById("progressFill");
@@ -76,7 +78,12 @@
                 fetch("/api/survey/session/start", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ participant_id: participantId, started_at: startedAt }),
+                    body: JSON.stringify({
+                        participant_id: participantId,
+                        started_at: startedAt,
+                        school_code: schoolCode ? parseInt(schoolCode) : null,
+                        class_number: classNumber ? parseInt(classNumber) : null,
+                    }),
                 }).catch(function () {});
             }
 
@@ -338,7 +345,12 @@
             fetch("/api/survey/session/start", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ participant_id: participantId, started_at: startedAt }),
+                body: JSON.stringify({
+                    participant_id: participantId,
+                    started_at: startedAt,
+                    school_code: schoolCode ? parseInt(schoolCode) : null,
+                    class_number: classNumber ? parseInt(classNumber) : null,
+                }),
             }).catch(function () {});
 
             renderCard();

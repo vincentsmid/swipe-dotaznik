@@ -21,26 +21,53 @@
         }
     };
 
+    /* Delete participant */
+    window.deleteParticipant = async function (participantId) {
+        if (!confirm("Opravdu chcete smazat všechna data účastníka \"" + participantId + "\"?")) return;
+
+        try {
+            const resp = await fetch("/api/admin/participants/" + encodeURIComponent(participantId), {
+                method: "DELETE",
+            });
+            if (resp.ok) {
+                window.location.reload();
+            } else {
+                const err = await resp.json();
+                alert(err.detail || "Chyba při mazání");
+            }
+        } catch (error) {
+            alert("Chyba připojení");
+        }
+    };
+
     /* Load responses into the dashboard */
     async function loadResponses() {
         const area = document.getElementById("responsesArea");
         if (!area) return;
 
         try {
-            const [respResp, qResp] = await Promise.all([
+            const [respResp, qResp, sessResp] = await Promise.all([
                 fetch("/api/admin/responses"),
                 fetch("/api/admin/questions"),
+                fetch("/api/admin/sessions"),
             ]);
 
-            if (!respResp.ok || !qResp.ok) throw new Error();
+            if (!respResp.ok || !qResp.ok || !sessResp.ok) throw new Error();
 
             const responses = await respResp.json();
             const questions = await qResp.json();
+            const sessions = await sessResp.json();
 
             if (responses.length === 0) {
                 area.innerHTML = '<p class="empty-state">Zatím žádné odpovědi.</p>';
                 return;
             }
+
+            // Build session lookup by participant_id
+            const sessionLookup = {};
+            sessions.forEach(function (s) {
+                sessionLookup[s.participant_id] = s;
+            });
 
             // Build lookup: (participant_id, question_id) -> answer
             const lookup = {};
@@ -56,20 +83,27 @@
 
             // Build table
             let html = '<div style="overflow-x:auto;"><table class="response-table"><thead><tr>';
-            html += "<th>Účastník</th>";
+            html += "<th>Účastník</th><th>Kód školy</th><th>Třída</th>";
             surveyQuestions.forEach(function (q) {
                 html += "<th>" + escapeHtml(q.text) + "</th>";
             });
+            html += "<th>Akce</th>";
             html += "</tr></thead><tbody>";
 
             participants.forEach(function (pid) {
+                var sess = sessionLookup[pid] || {};
+                var schoolCode = sess.school_code != null ? sess.school_code : "";
+                var classNum = sess.class_number != null ? sess.class_number : "";
                 html += "<tr><td>" + escapeHtml(pid) + "</td>";
+                html += "<td>" + escapeHtml(String(schoolCode)) + "</td>";
+                html += "<td>" + escapeHtml(String(classNum)) + "</td>";
                 surveyQuestions.forEach(function (q) {
                     const ans = lookup[pid + "_" + q.id] || "";
                     const cls = ans ? "answer-" + ans : "";
                     const labels = { yes: "Ano", no: "Ne", skip: "Přeskočeno", "N/A": "N/A" };
                     html += '<td class="' + cls + '">' + (labels[ans] || "") + "</td>";
                 });
+                html += '<td><button class="btn btn-danger btn-sm" onclick="deleteParticipant(\'' + escapeHtml(pid).replace(/'/g, "\\'") + '\')">Smazat</button></td>';
                 html += "</tr>";
             });
 

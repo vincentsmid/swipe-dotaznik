@@ -11,13 +11,20 @@ class SessionDAO:
         self,
         participant_id: str,
         started_at: datetime,
+        school_code: int | None = None,
+        class_number: int | None = None,
     ) -> None:
         """Record when participant starts the real survey."""
         existing = await SurveySession.select().where(
             SurveySession.participant_id == participant_id
         )
         if existing:
-            await SurveySession.update({SurveySession.started_at: started_at}).where(
+            update_data: dict[Any, Any] = {SurveySession.started_at: started_at}
+            if school_code is not None:
+                update_data[SurveySession.school_code] = school_code
+            if class_number is not None:
+                update_data[SurveySession.class_number] = class_number
+            await SurveySession.update(update_data).where(
                 SurveySession.participant_id == participant_id
             )
         else:
@@ -25,6 +32,8 @@ class SessionDAO:
                 SurveySession(
                     participant_id=participant_id,
                     started_at=started_at,
+                    school_code=school_code,
+                    class_number=class_number,
                 ),
             )
 
@@ -41,6 +50,12 @@ class SessionDAO:
                 SurveySession.duration_ms: duration_ms,
             },
         ).where(SurveySession.participant_id == participant_id)
+
+    async def delete_session(self, participant_id: str) -> None:
+        """Delete a session by participant ID."""
+        await SurveySession.delete().where(
+            SurveySession.participant_id == participant_id
+        )
 
     async def get_all_sessions(self) -> list[dict[str, Any]]:
         """Get all sessions."""

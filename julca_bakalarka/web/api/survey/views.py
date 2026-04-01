@@ -104,7 +104,12 @@ async def start_session(body: SessionStartRequest) -> dict[str, Any]:
     if not pid:
         raise HTTPException(status_code=400, detail="Identifikátor nesmí být prázdný")
     dao = SessionDAO()
-    await dao.start_session(pid, body.started_at)
+    await dao.start_session(
+        pid,
+        body.started_at,
+        school_code=body.school_code,
+        class_number=body.class_number,
+    )
     return {"ok": True}
 
 

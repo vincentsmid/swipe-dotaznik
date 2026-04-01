@@ -17,6 +17,37 @@
     .start-form { width: 100%; display: flex; flex-direction: column; gap: 1rem; }
     .start-form .btn { width: 100%; padding: 1rem; font-size: 1.1rem; }
     .error-msg { color: #dc2626; font-size: 0.9rem; display: none; }
+    .start-form input[type="number"],
+    .start-form select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #d1d5db;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        outline: none;
+        transition: border-color 0.2s;
+        background: #fff;
+        color: #333;
+        font-family: inherit;
+        -moz-appearance: none;
+        appearance: none;
+    }
+    .start-form input[type="number"]:focus,
+    .start-form select:focus {
+        border-color: #4f46e5;
+    }
+    .start-form select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
+    }
+    .form-label {
+        align-self: flex-start;
+        color: #6b7280;
+        font-size: 0.95rem;
+        margin-bottom: -0.5rem;
+    }
 </style>
 {% endblock %}
 
@@ -26,7 +57,22 @@
     <p>Zadej svůj identifikátor, který jsi dostal/a od učitele.</p>
     <form class="start-form" id="startForm">
         <input type="text" id="participantId" placeholder="Tvůj identifikátor" autocomplete="off" required>
-        <p class="error-msg" id="errorMsg">Prosím zadej svůj identifikátor.</p>
+        <input type="text" id="schoolCode" inputmode="numeric" pattern="[0-9]*" placeholder="Kód školy" autocomplete="off" required>
+        <label for="classNumber" class="form-label">Třída</label>
+        <select id="classNumber" required>
+            <option value="" disabled selected>Vyber třídu</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
+        <p class="error-msg" id="errorMsg">Prosím vyplň všechna pole.</p>
         <button type="submit" class="btn btn-primary">Pokračovat</button>
     </form>
 </div>
@@ -37,13 +83,17 @@
 document.getElementById('startForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const pid = document.getElementById('participantId').value.trim();
+    const schoolCode = document.getElementById('schoolCode').value.trim();
+    const classNumber = document.getElementById('classNumber').value;
     const errorMsg = document.getElementById('errorMsg');
-    if (!pid) {
+    if (!pid || !schoolCode || !classNumber) {
         errorMsg.style.display = 'block';
         return;
     }
     errorMsg.style.display = 'none';
     sessionStorage.setItem('participant_id', pid);
+    sessionStorage.setItem('school_code', schoolCode);
+    sessionStorage.setItem('class_number', classNumber);
     window.location.href = '/survey/instructions';
 });
 </script>
