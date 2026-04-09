@@ -25,7 +25,7 @@ class StartRequest(BaseModel):
     """Request body for starting a survey."""
 
     participant_id: str
-    school_code: int | None = None
+    school_code: str | None = None
     class_number: int | None = None
 
 
@@ -34,7 +34,7 @@ class SessionStartRequest(BaseModel):
 
     participant_id: str
     started_at: datetime
-    school_code: int | None = None
+    school_code: str | None = None
     class_number: int | None = None
 
 

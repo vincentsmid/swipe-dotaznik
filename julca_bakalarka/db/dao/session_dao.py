@@ -11,7 +11,7 @@ class SessionDAO:
         self,
         participant_id: str,
         started_at: datetime,
-        school_code: int | None = None,
+        school_code: str | None = None,
         class_number: int | None = None,
     ) -> None:
         """Record when participant starts the real survey."""

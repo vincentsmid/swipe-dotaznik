@@ -127,6 +127,7 @@ line-length = 88
 "tests/*" = [
     "S101",    # Use of assert detected
 	"PLC0415", # Import outside toplevel
+	"D103",    # Missing docstring in public function
 ]
 
 [tool.ruff.lint.pydocstyle]

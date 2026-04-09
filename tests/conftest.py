@@ -7,6 +7,8 @@ from httpx import ASGITransport, AsyncClient
 from piccolo.conf.apps import Finder
 from piccolo.table import create_tables, drop_tables
 
+from julca_bakalarka.db.dao.question_dao import QuestionDAO
+from julca_bakalarka.settings import settings
 from julca_bakalarka.web.application import get_app
 
 
@@ -60,3 +62,42 @@ async def client(
         transport=ASGITransport(fastapi_app), base_url="http://test", timeout=2.0
     ) as ac:
         yield ac
+
+
+@pytest.fixture
+def admin_auth() -> tuple[str, str]:
+    """Admin credentials for HTTP Basic Auth."""
+    return ("admin", settings.admin_password)
+
+
+@pytest.fixture
+async def sample_question() -> dict[str, Any]:
+    """Create a sample non-practice question in DB."""
+    dao = QuestionDAO()
+    q = await dao.create(text="Test question?", media_filename="test.gif", order=1)
+    return {
+        "id": q.id,  # type: ignore[attr-defined]
+        "text": "Test question?",
+        "media_filename": "test.gif",
+        "order": 1,
+        "is_practice": False,
+    }
+
+
+@pytest.fixture
+async def sample_practice_question() -> dict[str, Any]:
+    """Create a sample practice question in DB."""
+    dao = QuestionDAO()
+    q = await dao.create(
+        text="Practice question?",
+        media_filename="practice.gif",
+        order=1,
+        is_practice=True,
+    )
+    return {
+        "id": q.id,  # type: ignore[attr-defined]
+        "text": "Practice question?",
+        "media_filename": "practice.gif",
+        "order": 1,
+        "is_practice": True,
+    }

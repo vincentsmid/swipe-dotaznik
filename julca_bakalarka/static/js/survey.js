@@ -81,7 +81,7 @@
                     body: JSON.stringify({
                         participant_id: participantId,
                         started_at: startedAt,
-                        school_code: schoolCode ? parseInt(schoolCode) : null,
+                        school_code: schoolCode || null,
                         class_number: classNumber ? parseInt(classNumber) : null,
                     }),
                 }).catch(function () {});
@@ -348,7 +348,7 @@
                 body: JSON.stringify({
                     participant_id: participantId,
                     started_at: startedAt,
-                    school_code: schoolCode ? parseInt(schoolCode) : null,
+                    school_code: schoolCode || null,
                     class_number: classNumber ? parseInt(classNumber) : null,
                 }),
             }).catch(function () {});
